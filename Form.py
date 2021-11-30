@@ -26,9 +26,10 @@ class MyServer(BaseHTTPRequestHandler):
         html.h4(self, "Connexion", "", True)
         html.form(self, "POST", "", "form-control",
                   [html.label(self, "name", "Votre nom:"), html.input(self, "text", "name", "form-control", "name", "Votre nom"),
-                    html.label(self, "mail", "Votre E-Mail:"), html.input(self, "text", "mail", "form-control", "mail", "Votre E-mail"),
-                    html.label(self, "password", "Votre Mot de passe:"), html.input(self, "password", "password", "form-control", "password", "Votre Mot de passe"),
-                    html.br(self), html.a(self, "Update", "form-control btn btn-primary", "#", "button")])
+                   html.label(self, "mail", "Votre E-Mail:"), html.input(self, "text", "mail", "form-control", "mail", "Votre E-mail"),
+                   html.label(self, "password", "Votre Mot de passe:"), html.input(self, "password", "password", "form-control", "password", "Votre Mot de passe"),
+                   html.div(self, "form-check", ""), html.checkbox(self, "checkbox", "remember"), html.label(self, "remember", "Se rappeler de moi"), html.end_div(self),
+                   html.a(self, "Update", "form-control btn btn-primary", "index.py", "button")])
         html.end_form(self)
         html.end_div(self)
         html.end_div(self)
