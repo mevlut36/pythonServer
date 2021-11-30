@@ -23,9 +23,12 @@ class MyServer(BaseHTTPRequestHandler):
         html.div(self, "d-flex", "wrapper")
         html.div(self, "container-fluid", "")
         html.div(self, "col-md-3", "")
-        html.form(self, "POST", "", "form-control", [html.label(self, "name", "Votre nom:"), html.input(self, "text", "name", "form-control", "name", "Votre nom"),
-                                                     html.label(self, "mail", "Votre E-Mail:"), html.input(self, "text", "mail", "form-control", "mail", "Votre E-mail"),
-                                                     html.label(self, "password", "Votre Mot de passe:"), html.input(self, "password", "password", "form-control", "password", "Votre Mot de passe")])
+        html.h4(self, "Connexion", "", True)
+        html.form(self, "POST", "", "form-control",
+                  [html.label(self, "name", "Votre nom:"), html.input(self, "text", "name", "form-control", "name", "Votre nom"),
+                    html.label(self, "mail", "Votre E-Mail:"), html.input(self, "text", "mail", "form-control", "mail", "Votre E-mail"),
+                    html.label(self, "password", "Votre Mot de passe:"), html.input(self, "password", "password", "form-control", "password", "Votre Mot de passe"),
+                    html.br(self), html.a(self, "Update", "form-control btn btn-primary", "#", "button")])
         html.end_form(self)
         html.end_div(self)
         html.end_div(self)
