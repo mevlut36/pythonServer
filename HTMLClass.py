@@ -33,13 +33,13 @@ class MyServer(BaseHTTPRequestHandler):
         """ Set link tag : <link rel='' href=''> """
         return self.wfile.write(bytes("<link rel='" + rel + "' href='" + data + "' >", 'UTF-8'))
 
-    def a(self, text, link):
-        """ Add text link, tag : <a href="link"></a> """
-        return self.wfile.write(bytes("<a href={0}> {1} </a>".format(webbrowser.open(link), text), "utf-8"))
+    def a(self, text, classe, link, role):
+        """ Add text, class, link, tag : <a href="link"></a> """
+        return self.wfile.write(bytes("<a href='{0}' class='{1}' role='{2}'> {3} </a>".format(link, classe, role, text), "utf-8"))
 
-    def button(self, type, classe, text, name):
+    def button(self, type, classe, text):
         """ Set Button (self, class, text, button-name, tag : <button class='' type='' name=''></button> """
-        return self.wfile.write(bytes("<button class='{0}' type='{1}' name='{2}'> {3} </button>".format(type, classe, name, text), "utf-8"))
+        return self.wfile.write(bytes("<button class='{0}' type='{1}'> {2} </button>".format(classe, type, text), "utf-8"))
 
     def parag(self, text, classe, underline=False, bold=False):
         """ Set paragraph (self, text, class, underline=True|False, bold=True|False, tag : <p></p> """
@@ -134,7 +134,7 @@ class MyServer(BaseHTTPRequestHandler):
 
     def input(self, type, name, classe, id, placeholder):
         """ Add input (self, name, class, id, placeholder='', tag : <input name='' id='' placeholder='' class=''></input> """
-        return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='on'>".format(type, classe, name, id, placeholder), "utf-8"))
+        return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder), "utf-8"))
 
     def hr(self, classe):
         """ Set hr (self, class, tag : <hr class=''> """
