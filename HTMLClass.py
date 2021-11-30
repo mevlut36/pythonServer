@@ -94,6 +94,9 @@ class MyServer(BaseHTTPRequestHandler):
         elif not underline:
             return self.wfile.write(bytes("<h6 class='{0}'> {1} </h6>".format(classe, text), "utf-8"))
 
+    def label(self, for_method, texte):
+        return self.wfile.write(bytes("<label for='{0}'>{1}</label>".format(for_method, texte), "utf-8"))
+
     def b(self, text, classe):
         """ Add text in bold (self, text, class, tag : <b></b> """
         return self.wfile.write(bytes("<b class='{0}'> {1} </b>".format(classe, text), "utf-8"))
@@ -110,12 +113,17 @@ class MyServer(BaseHTTPRequestHandler):
         li += (bytes("</ul>", "utf-8"))
         return self.wfile.write(li)
 
-    def form(self, method):
+    def form(self, method, action, classe, argss=None):
         """ Set form in-dev... (self, text, class, underline=True|False, tag : <form method='GET or POST'></form> """
+        if argss is None:
+            argss = []
         if method == "post":
-            return self.wfile.write(bytes("<form method='post'>", "utf-8"))
+            return self.wfile.write(bytes("<form method='post' action='{0}' class='{1}'> {2}".format(action, classe, argss), "utf-8"))
         elif method == "get":
-            return self.wfile.write(bytes("<form method='get'>", "utf-8"))
+            return self.wfile.write(bytes("<form method='get' action='{0}' class='{1}'> {2}".format(action, classe, argss), "utf-8"))
+
+    def end_form(self):
+        return self.wfile.write(bytes("</form>", "utf-8"))
 
     def img(self, images):
         """ Add image in-dev...(self, src, tag : <img src='path'> """
@@ -124,10 +132,9 @@ class MyServer(BaseHTTPRequestHandler):
         decoded_img = encoded_img.decode()
         return "<img src='data:image/png;base64," + decoded_img + "' class='rounded-circle' style='width: 15rem;' />"
 
-    def input(self, name, classe, placeholder):
-        """ Add input (self, name, class, placeholder='', tag : <input name='' placeholder='' class=''></input> """
-        return self.wfile.write(
-            bytes("<input class='{0}' name='{1}' placeholder='{2}'>".format(classe, name, placeholder), "utf-8"))
+    def input(self, type, name, classe, id, placeholder):
+        """ Add input (self, name, class, id, placeholder='', tag : <input name='' id='' placeholder='' class=''></input> """
+        return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='on'>".format(type, classe, name, id, placeholder), "utf-8"))
 
     def hr(self, classe):
         """ Set hr (self, class, tag : <hr class=''> """
