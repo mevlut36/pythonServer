@@ -95,6 +95,7 @@ class MyServer(BaseHTTPRequestHandler):
             return self.wfile.write(bytes("<h6 class='{0}'> {1} </h6>".format(classe, text), "utf-8"))
 
     def label(self, for_method, texte):
+        """ Set checkbox (self, for_method, text, tag : <label for=''></label>"""
         return self.wfile.write(bytes("<label for='{0}'>{1}</label>".format(for_method, texte), "utf-8"))
 
     def b(self, text, classe):
@@ -114,7 +115,7 @@ class MyServer(BaseHTTPRequestHandler):
         return self.wfile.write(li)
 
     def form(self, method, action, classe, argss=None):
-        """ Set form in-dev... (self, text, class, underline=True|False, tag : <form method='GET or POST'></form> """
+        """ Set form (self, text, class, underline=True|False, tag : <form method='GET or POST'></form> """
         if argss is None:
             argss = []
         if method == "post":
@@ -122,7 +123,15 @@ class MyServer(BaseHTTPRequestHandler):
         elif method == "get":
             return self.wfile.write(bytes("<form method='get' action='{0}' class='{1}'> {2}".format(action, classe, argss), "utf-8"))
 
+    def checkbox(self, type, id):
+        """ Set checkbox (self, type, id, tag : <input class='form-check-input' type='checkbox | radio' id=''> """
+        if type == "checkbox":
+            return self.wfile.write(bytes("<input class='form-check-input' type='checkbox' id='{0}'>".format(id), "utf-8"))
+        elif type == "radio":
+            return self.wfile.write(bytes("<input class='form-check-input' type='radio' id='{0}'>".format(id), "utf-8"))
+
     def end_form(self):
+        """ End form, tag : </form> """
         return self.wfile.write(bytes("</form>", "utf-8"))
 
     def img(self, images):
