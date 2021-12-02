@@ -13,11 +13,10 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
         html.start_html(self)
         html.start_head(self)
-        self.wfile.write(bytes("<title>Mevlut CV</title>", "utf-8"))
         self.wfile.write(bytes("<meta charset='utf-8'>", "utf-8"))
         html.link(self, "data:;base64,iVBORw0KGgo=", "icon")
         # html.link(self, "style.css", "stylesheet")
-        html.bootstrap(self)
+        html.bootstrap(self, None)
         html.end_head(self)
         # <body>
         self.wfile.write(bytes("<body>", "utf-8"))
@@ -26,7 +25,7 @@ class MyServer(BaseHTTPRequestHandler):
         html.div(self, "bg-white", "sidebar-wrapper")
         html.div(self, "list-group list-group-flush", "")
         # Image Nav
-        html.li(self, [html.img(self, "luffy.png"), "18 ans", "<i class='bi-file-person-fill'></i> Etudiant en BTS SIO : SISR", "mevlut36@gmail.com", "<i class='bi-phone'></i> 06 00 00 00 00", "<i class='bi-flag-fill'></i> <b>Langues:</b>", "<i class='bi-flag'></i> - Anglais", "<i class='bi-flag'></i> - Français", "<i class='bi-flag'></i> - Turc"], "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion", "list-group-item")
+        html.li(self, [html.img(self, "luffy.png"), "18 ans", "<i class='bi-file-person-fill'></i> Etudiant en BTS SIO : SISR", "mevlut36@gmail.com", "<i class='bi-phone'></i> 07 00 00 00 00", "<i class='bi-flag-fill'></i> <b>Langues:</b>", "<i class='bi-flag'></i> - Anglais", "<i class='bi-flag'></i> - Français", "<i class='bi-flag'></i> - Turc"], "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion", "list-group-item")
         html.end_div(self)
         html.end_div(self)
         html.end_div(self)
