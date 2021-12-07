@@ -222,7 +222,6 @@ class MyServer(BaseHTTPRequestHandler):
                 split = v.split('=')
                 d[split[0]] = split[1]
             # return d[key]
-            cc = d[key].encode("utf-8")
+            cc = d[key].encode()
             crypt = bcrypt.hashpw(cc, bcrypt.gensalt())
-            crypt.decode()
-            return crypt
+            return crypt.decode()
