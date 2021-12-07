@@ -1,10 +1,8 @@
 import base64
+import bcrypt
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import webbrowser
-
 
 class MyServer(BaseHTTPRequestHandler):
-
     def start_html(self):
         """ Start html, tag : <html> """
         return self.wfile.write(bytes("<html>", "utf-8"))
@@ -25,24 +23,33 @@ class MyServer(BaseHTTPRequestHandler):
         """ Set title of website, tag : <title></title> """
         return self.wfile.write(bytes("<title> {0} </title>".format(title), "utf-8"))
 
-    def bootstrap(self, link):
+    def bootstrap(self):
         """ Default Bootstrap, tag : <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'> """
-        if link is None:
-            return self.wfile.write(bytes("<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>", "utf-8")) & self.wfile.write(bytes("<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css' rel='stylesheet'>", "utf-8"))
-        else:
-            return self.wfile.write(bytes(f"<link href='{link}' rel='stylesheet'>", "utf-8"))
+        return self.wfile.write(bytes(
+            "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>",
+            "utf-8")) & self.wfile.write(bytes(
+            "<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css' rel='stylesheet'>",
+            "utf-8"))
 
     def link(self, data, rel):
         """ Set link tag : <link rel='' href=''> """
         return self.wfile.write(bytes("<link rel='" + rel + "' href='" + data + "' >", 'UTF-8'))
 
-    def a(self, text, classe, link, role):
+    def a(self, text, classe, link, role, isForm=False):
         """ Add text, class, link, tag : <a href="link"></a> """
-        return self.wfile.write(bytes("<a href='{0}' class='{1}' role='{2}'> {3} </a>".format(link, classe, role, text), "utf-8"))
+        if isForm:
+            return "<a href='{0}' class='{1}' role='{2}'> {3} </a>".format(link, classe, role, text)
+        else:
+            return self.wfile.write(
+                bytes("<a href='{0}' class='{1}' role='{2}'> {3} </a>".format(link, classe, role, text), "utf-8"))
 
-    def button(self, type, classe, text):
+    def button(self, type, classe, text, isForm=False):
         """ Set Button (self, class, text, button-name, tag : <button class='' type='' name=''></button> """
-        return self.wfile.write(bytes("<button class='{0}' type='{1}'> {2} </button>".format(classe, type, text), "utf-8"))
+        if isForm:
+            return "<button class='{0}' type='{1}'> {2} </button>".format(classe, type, text)
+        else:
+            return self.wfile.write(
+                bytes("<button class='{0}' type='{1}'> {2} </button>".format(classe, type, text), "utf-8"))
 
     def parag(self, text, classe, underline=False, bold=False):
         """ Set paragraph (self, text, class, underline=True|False, bold=True|False, tag : <p></p> """
@@ -97,9 +104,12 @@ class MyServer(BaseHTTPRequestHandler):
         elif not underline:
             return self.wfile.write(bytes("<h6 class='{0}'> {1} </h6>".format(classe, text), "utf-8"))
 
-    def label(self, for_method, texte):
+    def label(self, for_method, texte, isForm=False):
         """ Set checkbox (self, for_method, text, tag : <label for=''></label>"""
-        return self.wfile.write(bytes("<label for='{0}'>{1}</label>".format(for_method, texte), "utf-8"))
+        if isForm:
+            return "<label for='{0}'>{1}</label>".format(for_method, texte)
+        else:
+            return self.wfile.write(bytes("<label for='{0}'>{1}</label>".format(for_method, texte), "utf-8"))
 
     def b(self, text, classe):
         """ Add text in bold (self, text, class, tag : <b></b> """
@@ -117,21 +127,36 @@ class MyServer(BaseHTTPRequestHandler):
         li += (bytes("</ul>", "utf-8"))
         return self.wfile.write(li)
 
-    def form(self, method, action, classe, argss=None):
+    def form(self, method, action, classe, argss={}):
         """ Set form (self, text, class, underline=True|False, tag : <form method='GET or POST'></form> """
-        if argss is None:
-            argss = []
-        if method == "post":
-            return self.wfile.write(bytes("<form method='post' action='{0}' class='{1}'> {2}".format(action, classe, argss), "utf-8"))
+        if method == "POST":
+            pload = ''
+            for a in argss:
+                pload += a
+            return self.wfile.write(
+                bytes("<form method='" + method + "' action='" + action + "' class='" + classe + "'>" + pload + "".format(action, classe, argss), "utf-8"))
         elif method == "get":
-            return self.wfile.write(bytes("<form method='get' action='{0}' class='{1}'> {2}".format(action, classe, argss), "utf-8"))
+            pload = {}
+            for a in argss:
+                pload[a] = a
+            print(pload)
+            return self.wfile.write(
+                bytes("<form method='get' action='{0}' class='{1}'>{2}".format(action, classe, argss), "utf-8"))
 
-    def checkbox(self, type, id):
+    def checkbox(self, type, id, isForm=False):
         """ Set checkbox (self, type, id, tag : <input class='form-check-input' type='checkbox | radio' id=''> """
-        if type == "checkbox":
-            return self.wfile.write(bytes("<input class='form-check-input' type='checkbox' id='{0}'>".format(id), "utf-8"))
-        elif type == "radio":
-            return self.wfile.write(bytes("<input class='form-check-input' type='radio' id='{0}'>".format(id), "utf-8"))
+        if isForm:
+            if type == "checkbox":
+                return "<input class='form-check-input' type='checkbox' id='{0}'>".format(id)
+            elif type == "radio":
+                return "<input class='form-check-input' type='radio' id='{0}'>".format(id)
+        else:
+            if type == "checkbox":
+                return self.wfile.write(
+                    bytes("<input class='form-check-input' type='checkbox' id='{0}'>".format(id), "utf-8"))
+            elif type == "radio":
+                return self.wfile.write(
+                    bytes("<input class='form-check-input' type='radio' id='{0}'>".format(id), "utf-8"))
 
     def end_form(self):
         """ End form, tag : </form> """
@@ -144,21 +169,34 @@ class MyServer(BaseHTTPRequestHandler):
         decoded_img = encoded_img.decode()
         return "<img src='data:image/png;base64," + decoded_img + "' class='rounded-circle' style='width: 15rem;' />"
 
-    def input(self, type, name, classe, id, placeholder):
+    def input(self, type, name, classe, id, placeholder, isForm=True):
         """ Add input (self, name, class, id, placeholder='', tag : <input name='' id='' placeholder='' class=''></input> """
-        return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder), "utf-8"))
+        if type == "password":
+            nam = name.encode("utf-8")
+            crypt = bcrypt.hashpw(nam, bcrypt.gensalt())
+            print(crypt.decode())
+        if isForm:
+            return "<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder)
+        else:
+            return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder), "utf-8"))
 
     def hr(self, classe):
         """ Set hr (self, class, tag : <hr class=''> """
         return self.wfile.write(bytes("<hr class='{0}'>".format(classe), "utf-8"))
 
-    def div(self, classe, id):
+    def div(self, classe, id, isForm=False):
         """ Add div (self, class, id, tag : <div class='' id=''> """
-        return self.wfile.write(bytes("<div class='{0}' id='{1}'>".format(classe, id), "utf-8"))
+        if isForm:
+            return "<div class='{0}' id='{1}'>".format(classe, id)
+        else:
+            return self.wfile.write(bytes("<div class='{0}' id='{1}'>".format(classe, id), "utf-8"))
 
-    def end_div(self):
+    def end_div(self, isForm=False):
         """ End div (self, tag : </div> """
-        return self.wfile.write(bytes("</div>", "utf-8"))
+        if isForm:
+            return "</div>"
+        else:
+            return self.wfile.write(bytes("</div>", "utf-8"))
 
     def card_div(self, title, texte):
         """ Add div (self, class, id, tag : <div class='card'><div class='card-header py-3 bg-primary'><h6 class='m-0 font-weight-bold text-white'></h6></div><div class='card-body py-3'></div> """
@@ -176,3 +214,13 @@ class MyServer(BaseHTTPRequestHandler):
             "<div class='card'><div class='card-header py-3 bg-primary'><h6 class='m-0 font-weight-bold text-white'>" + title + "</h6></div><div class='card-body py-3'>" +
             li + "</div></div>", "utf-8")
         return self.wfile.write(response)
+
+    def decode_data(self, data, key, isForm=False):
+        if data == '':
+            return ''
+        else:
+            d = {}
+            for v in data.split('&'):
+                split = v.split('=')
+                d[split[0]] = split[1]
+            return d[key]
