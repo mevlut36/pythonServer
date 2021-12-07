@@ -2,6 +2,21 @@ import base64
 import bcrypt
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+
+def crypt_pwd(data, key):
+    if data == '':
+        return ''
+    else:
+        d = {}
+        for v in data.split('&'):
+            split = v.split('=')
+            d[split[0]] = split[1]
+        # return d[key]
+        cc = d[key].encode()
+        crypt = bcrypt.hashpw(cc, bcrypt.gensalt())
+        return "Pwd crypted : " + crypt.decode()
+
+
 class MyServer(BaseHTTPRequestHandler):
     def start_html(self):
         """ Start html, tag : <html> """
@@ -208,12 +223,15 @@ class MyServer(BaseHTTPRequestHandler):
 
     def input(self, type, name, classe, id, placeholder, isForm=True):
         """ Add input (self, name, class, id, placeholder='', tag : <input name='' id='' placeholder='' class=''></input> """
+        if type == "password":
+            data = ''
+            crypt_pwd('', "password")
         if isForm:
             return "<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder)
         else:
             return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder), "utf-8"))
 
-    def decode_data(self, data, key, isForm=False):
+    def decode_data(self, data, key):
         if data == '':
             return ''
         else:
@@ -221,7 +239,4 @@ class MyServer(BaseHTTPRequestHandler):
             for v in data.split('&'):
                 split = v.split('=')
                 d[split[0]] = split[1]
-            # return d[key]
-            cc = d[key].encode()
-            crypt = bcrypt.hashpw(cc, bcrypt.gensalt())
-            return crypt.decode()
+            return d[key]
