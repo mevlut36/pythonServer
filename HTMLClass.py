@@ -127,8 +127,10 @@ class MyServer(BaseHTTPRequestHandler):
         li += (bytes("</ul>", "utf-8"))
         return self.wfile.write(li)
 
-    def form(self, method, action, classe, argss={}):
+    def form(self, method, action, classe, argss=None):
         """ Set form (self, text, class, underline=True|False, tag : <form method='GET or POST'></form> """
+        if argss is None:
+            argss = {}
         if method == "POST":
             pload = ''
             for a in argss:
@@ -169,17 +171,6 @@ class MyServer(BaseHTTPRequestHandler):
         decoded_img = encoded_img.decode()
         return "<img src='data:image/png;base64," + decoded_img + "' class='rounded-circle' style='width: 15rem;' />"
 
-    def input(self, type, name, classe, id, placeholder, isForm=True):
-        """ Add input (self, name, class, id, placeholder='', tag : <input name='' id='' placeholder='' class=''></input> """
-        if type == "password":
-            nam = name.encode("utf-8")
-            crypt = bcrypt.hashpw(nam, bcrypt.gensalt())
-            print(crypt.decode())
-        if isForm:
-            return "<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder)
-        else:
-            return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder), "utf-8"))
-
     def hr(self, classe):
         """ Set hr (self, class, tag : <hr class=''> """
         return self.wfile.write(bytes("<hr class='{0}'>".format(classe), "utf-8"))
@@ -215,6 +206,13 @@ class MyServer(BaseHTTPRequestHandler):
             li + "</div></div>", "utf-8")
         return self.wfile.write(response)
 
+    def input(self, type, name, classe, id, placeholder, isForm=True):
+        """ Add input (self, name, class, id, placeholder='', tag : <input name='' id='' placeholder='' class=''></input> """
+        if isForm:
+            return "<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder)
+        else:
+            return self.wfile.write(bytes("<input type='{0}' class='{1}' name='{2}' id='{3}' placeholder='{4}' autocomplete='off'>".format(type, classe, name, id, placeholder), "utf-8"))
+
     def decode_data(self, data, key, isForm=False):
         if data == '':
             return ''
@@ -223,4 +221,8 @@ class MyServer(BaseHTTPRequestHandler):
             for v in data.split('&'):
                 split = v.split('=')
                 d[split[0]] = split[1]
-            return d[key]
+            # return d[key]
+            cc = d[key].encode("utf-8")
+            crypt = bcrypt.hashpw(cc, bcrypt.gensalt())
+            crypt.decode()
+            return crypt
