@@ -40,11 +40,7 @@ class MyServer(BaseHTTPRequestHandler):
 
     def bootstrap(self):
         """ Default Bootstrap, tag : <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'> """
-        return self.wfile.write(bytes(
-            "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>",
-            "utf-8")) & self.wfile.write(bytes(
-            "<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css' rel='stylesheet'>",
-            "utf-8"))
+        return self.wfile.write(bytes("<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>", "utf-8")) & self.wfile.write(bytes("<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css' rel='stylesheet'>", "utf-8"))
 
     def link(self, data, rel):
         """ Set link tag : <link rel='' href=''> """
@@ -239,4 +235,4 @@ class MyServer(BaseHTTPRequestHandler):
             for v in data.split('&'):
                 split = v.split('=')
                 d[split[0]] = split[1]
-            return d[key]
+            return "Nom: " + d[key]
