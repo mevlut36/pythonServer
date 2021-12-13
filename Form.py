@@ -35,8 +35,10 @@ class MyServer(BaseHTTPRequestHandler):
                    html.input(self, "password", "password", "form-control", "password", "Votre Mot de passe", True),
                    html.div(self, "form-check", "", True), html.checkbox(self, "checkbox", "remember", True),
                    html.label(self, "remember", "Se rappeler de moi", True), html.end_div(self, True),
-                   html.decode_data(self, data, 'password', True),
-                   html.button(self, "submit", "form-control btn btn-primary", "Update", True)])
+                   html.button(self, "submit", "form-control btn btn-primary", "Update", True),
+                   html.decode_data(self, data, "name"),
+                   HTMLClass.crypt_pwd(data, 'password'),
+                   ])
         html.end_form(self)
         html.end_div(self)
         html.end_div(self)
