@@ -32,10 +32,7 @@ class DB:
         """ Create a db, (CREATE DATABASE {name}) """
         cn = self.conn()
         cur = cn.cursor()
-        if name:
-            return False
-        else:
-            cur.execute("CREATE DATABASE {0}".format(name))
+        cur.execute("CREATE DATABASE {0}".format(name))
 
     def checkAllDB(self):
         """ Check all DB """
@@ -56,11 +53,9 @@ class DB:
     def createTable(self, name, arg):
         """ Create table (CREATE TABLE {name} ({element}))"""
         cn = self.conn()
-        cur = cn.cursor()
-        if name:
-            return False
-        else:
-            cur.execute("CREATE TABLE {0} ({1})".format(name, arg))
+        cur = cn.cursor(buffered=True)
+        cur.execute("CREATE TABLE {0} ({1})".format(name, arg))
+
 
     def removeTable(self, name):
         """ Remove a table {name} """
