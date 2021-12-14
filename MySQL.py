@@ -57,7 +57,10 @@ class DB:
         """ Create table (CREATE TABLE {name} ({element}))"""
         cn = self.conn()
         cur = cn.cursor()
-        cur.execute("CREATE TABLE {0} ({1})".format(name, arg))
+        if name:
+            return False
+        else:
+            cur.execute("CREATE TABLE {0} ({1})".format(name, arg))
 
     def removeTable(self, name):
         """ Remove a table {name} """
